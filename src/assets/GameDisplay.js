@@ -87,30 +87,31 @@ export class GameDisplay {
 		this.clearStage()
 
 		/* create hyperspeed white lines */
-		for (let x = 0; x < WIDTH; x += 50) {
-			for (let y = 0; y < HEIGHT; y += 200) {
-				let g = new PIXI.Graphics()
+		// for (let x = 0; x < WIDTH; x += 50) {
+		// 	for (let y = 0; y < HEIGHT; y += 200) {
+		// 		let g = new PIXI.Graphics()
 
-				const sx = x
-				const sy = y + rand(50, 100)
-				const length = rand(100, 200)
-				g.beginFill(0xffffff)
-				g.drawRoundedRect(0, 0, 5, length)
-				g.endFill()
-				g.x = sx
-				g.y = sy
-				this.stage.addChild(g)
-				const tween = () => {
-					this.tween(g, 15, { x: sx, y: HEIGHT + length + 5 }, () => {
-						// reset the position to the original x position, but different y
-						g.x = sx
-						g.y = -HEIGHT
-						tween()
-					})
-				}
-				tween()
-			}
-		}
+		// 		const sx = x
+		// 		const sy = y + rand(50, 100)
+		// 		const length = rand(100, 200)
+		// 		g.beginFill(0xffffff)
+		// 		g.drawRoundedRect(0, 0, 5, length)
+		// 		g.endFill()
+		// 		g.x = sx
+		// 		g.y = sy
+		// 		this.stage.addChild(g)
+		// 		const tween = () => {
+		// 			this.tween(g, 15, { x: sx, y: HEIGHT + length + 5 }, () => {
+		// 				// reset the position to the original x position, but different y
+		// 				g.x = sx
+		// 				g.y = -HEIGHT
+		// 				tween()
+		// 			})
+		// 		}
+		// 		tween()
+		// 	}
+		// }
+		const startContainer = new PIXI.Container()
 		/* create title text, start at top and animate it down */
 		const titleStyling = new PIXI.TextStyle({
 			fontFamily: 'Audiowide',
@@ -118,26 +119,57 @@ export class GameDisplay {
 			fontWeight: 'bold',
 			fill: '#e4c203'
 		})
-		let titleText = new PIXI.Text('Adventures of a Lone Spaceship', titleStyling)
-		let center = {
-			x: WIDTH / 2 - titleText.width / 2,
-			y: HEIGHT / 2 - titleText.height / 2 + 200
-		}
-		titleText.x = center.x
-		titleText.y = 0
-		this.stage.addChild(titleText)
-		/* create space ship */
-		let g = new PIXI.Graphics()
+		let titleText = new PIXI.Text('7DRL Alien Conquest', titleStyling)
 
-		const length = rand(100, 200)
-		g.beginFill(0xffffff)
-		g.drawRoundedRect(0, 0, 5, length)
-		g.endFill()
-		g.x = sx
-		g.y = sy
-		this.stage.addChild(g)
+		titleText.x = WIDTH / 2 - titleText.width / 2
+		titleText.y = HEIGHT / 4 - titleText.height / 2
+		startContainer.addChild(titleText)
+
+		//  author text
+		let authorText = new PIXI.Text(
+			'Created by Larkenx',
+			new PIXI.TextStyle({
+				fontFamily: 'Audiowide',
+				fontSize: 20,
+				fontWeight: 'bold',
+				fill: '#e4c203'
+			})
+		)
+
+		authorText.x = WIDTH / 2 - authorText.width / 2
+		authorText.y = HEIGHT / 4 - authorText.height / 2 + 50
+		startContainer.addChild(authorText)
+
+		/* create start button */
+		const startButtonStyling = new PIXI.TextStyle({
+			fontFamily: 'Audiowide,Consolas',
+			fontSize: 24,
+			fill: '#f6f6f6'
+		})
+		let startButtonText = new PIXI.Text('New Game', startButtonStyling)
+		startButtonText.buttonMode = true
+		startButtonText.interactive = true
+		startButtonText.x = WIDTH / 2 - startButtonText.width / 2
+		startButtonText.y = HEIGHT / 2 - startButtonText.height / 2
+		startButtonText.alpha = 0.5
+
+		startButtonText.on('pointerdown', () => {
+			console.log('button pressed')
+		})
+		startButtonText.on('pointerover', () => {
+			startButtonText.alpha = 1
+		})
+		startButtonText.on('pointerout', () => {
+			startButtonText.alpha = 0.5
+		})
+		startContainer.addChild(startButtonText)
+
 		// kick off animation for title text slowly moving to center
-		this.tween(titleText, 5, center)
+		let center = {
+			x: WIDTH / 2,
+			y: HEIGHT / 4
+		}
+		this.stage.addChild(startContainer)
 		this.renderer.render(this.stage)
 	}
 
